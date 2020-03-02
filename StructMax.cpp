@@ -1,64 +1,156 @@
-﻿// StructMax.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
 #include <iostream>
 #include <string>
+#include <Windows.h>
 #include <ctime>
+#include <cstdio>
+#include <list>
 
 
 using namespace std;
 
-struct AMD
+struct DateBorn
 {
-	int price;
-	int volume_mem;
-	int date_year;//12.12.12
+	int day;
+	int month;
+	int year;
+	bool IsCorect();
+public: void ShowDate();
 	
+
 };
+void DateBorn::ShowDate()
+{
+	cout << day << "." << month<<"." << year << endl;
+}
+bool DateBorn::IsCorect()
+{
+	bool result = false;
+	switch (month)
+	{
+	case 1:
+	case 3:
+	case 5:
+	case 7:
+	case 8:
+	case 10:
+	case 12:
+	{
+		if ((day <= 31) && (day > 0))
+			result = true;
+		break;
+	}
+
+	case 4:
+	case 6:
+	case 9:
+	case 11:
+	{
+		if ((day <= 30) && (day > 0))
+			result = true;
+		break;
+	}
+
+	case 2:
+	{
+		if (year % 4 != 0)
+		{
+			if ((day <= 28) && (day > 0))
+				result = true;
+		}
+		else
+			if (year % 400 == 0)
+			{
+				if ((day <= 29) && (day > 0))
+					result = true;
+			}
+			else
+				if ((year % 100 == 0) && (year % 400 != 0))
+				{
+					if ((day == 28) && (day > 0))
+						result = true;
+				}
+				else
+					if ((year % 4 == 0) && (year % 100 != 0))
+						if ((day <= 29) && (day > 0))
+							result = true;
+		break;
+	}
+
+	default:
+		result = false;
+	}
+
+	return result;
+	
+}
+struct Emploee
+{
+	string Name;
+	string Surname;
+	string Patronymic;
+	string Position;
+	DateBorn date_born;
+	struct Manager
+	{
+		static const int salary = 100000;//"$"
+
+	};
+	struct Rower//Гребец
+	{
+		static const  int salary = 3000;
+
+	};
+};
+
+void ShowInfoForMayEmploee(const int num_may_emp,Emploee* mas_emploee,int count_may_emp)
+{
+cout << "FullName\tPosition\tDate_Born\tManager_Salary\tRower_Salary\n";
+for (int i = 0; i < count_may_emp; i++)
+{
+	if (num_may_emp == mas_emploee[i].date_born.month)
+	{
+		cout << mas_emploee[i].Name<<" "<< mas_emploee[i].Surname<<" "<< mas_emploee[i].Patronymic << "\t\t";
+		cout << mas_emploee[i].Position << "\t\t";
+		cout<<mas_emploee[i].date_born.day<<"."<<mas_emploee[i].date_born.month<<"."<<mas_emploee[i].date_born.year<< "\t\t";
+		cout << Emploee::Manager::salary << "\t\t";
+		cout << Emploee::Rower::salary << endl;
+	}
+}
+}
 
 
 int main()
 {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	//srand(time(NULL));
+	Emploee* mas_emploee = new Emploee[2];
+	
+	//list<Emploee> List_Emploee[2];
 
-	AMD* mas_pc = new AMD[10]{};
 	int min = 20000;
-	cout << "Price\t\tVolume\t\tData_Year\n";
-	int temp;
-	
-
-	for (size_t i = 0; i < 10; i++)
+	int may_month =5;
+	int num_may_emp;
+	int count_may_emp=0;
+	for (size_t i = 0; i < 2; i++)
 	{
-			
-			cout<<  (mas_pc[i].price = pow(10, 3) + rand() )<<"\t\t";
-			cout<< (mas_pc[i].volume_mem = 4 + rand() % 20 )<<"\t\t"; 
-			cout << (mas_pc[i].date_year = 2000 + rand() % 21);
-			cout << endl;
-			if (mas_pc[i].price < min)
-			{
-
-				min = mas_pc[i].price;
-				temp = i;
-
-			}
-			//mas_pc[i].date = while(rand())
-
-		
+		       cout << "Введите ФИО "<<i+1 << "-ого сотрудника галеры: ";
+			   cin.ignore(cin.rdbuf()->in_avail());
+		       cin>>mas_emploee[i].Name>> mas_emploee[i].Surname>> mas_emploee[i].Patronymic;
+			   cout << "Введите должность " << i + 1 << "-ого  сотрудника галеры(Manager or Гребец): ";
+			   cin >> mas_emploee[i].Position;//Manager or Worker
+			   cout << "Введите дату рождения " << i + 1 << "-ого сотрудника галеры через пробел(напрример 12 12 12):";
+			   cin >> mas_emploee[i].date_born.day >> mas_emploee[i].date_born.month >> mas_emploee[i].date_born.year;
+			   if (mas_emploee[i].date_born.month == may_month){
+				   num_may_emp = mas_emploee[i].date_born.month;
+				   count_may_emp++;
+			   }
 	}
+	ShowInfoForMayEmploee(num_may_emp,mas_emploee, count_may_emp);
 	
 
-	cout << endl << mas_pc[temp].price << "\t" << mas_pc[temp].volume_mem<<"\t"<< mas_pc[temp].date_year;
+
 
 
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
