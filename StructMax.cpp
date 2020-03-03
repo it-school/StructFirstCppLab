@@ -15,12 +15,12 @@ struct DateBorn
 	int year;
 	bool IsCorect();
 public: void ShowDate();
-	
+
 
 };
 void DateBorn::ShowDate()
 {
-	cout << day << "." << month<<"." << year << endl;
+	cout << day << "." << month << "." << year << endl;
 }
 bool DateBorn::IsCorect()
 {
@@ -81,7 +81,7 @@ bool DateBorn::IsCorect()
 	}
 
 	return result;
-	
+
 }
 struct Emploee
 {
@@ -93,64 +93,64 @@ struct Emploee
 	struct Manager
 	{
 		static const int salary = 100000;//"$"
-
+		// статические поля целесообразно использовать, если их значения общие для всех представителей этого структуры
+		// разве все менеджеры получают одинаковую зарплату?
+		// если изменить её, то зарплата помняется у всех менеджеров
 	};
-	struct Rower//Гребец
+	struct Rower //Гребец
 	{
-		static const  int salary = 3000;
-
+		static const int salary = 3000;
 	};
 };
 
-void ShowInfoForMayEmploee(const int num_may_emp,Emploee* mas_emploee,int count_may_emp)
+void ShowInfoForMayEmploee(const int num_may_emp, Emploee* mas_emploee, int count_may_emp)
 {
-cout << "FullName\tPosition\tDate_Born\tManager_Salary\tRower_Salary\n";
-for (int i = 0; i < count_may_emp; i++)
-{
-	if (num_may_emp == mas_emploee[i].date_born.month)
+	cout << "FullName\tPosition\tDate_Born\tManager_Salary\tRower_Salary\n";
+	for (int i = 0; i < count_may_emp; i++)
 	{
-		cout << mas_emploee[i].Name<<" "<< mas_emploee[i].Surname<<" "<< mas_emploee[i].Patronymic << "\t\t";
-		cout << mas_emploee[i].Position << "\t\t";
-		cout<<mas_emploee[i].date_born.day<<"."<<mas_emploee[i].date_born.month<<"."<<mas_emploee[i].date_born.year<< "\t\t";
-		cout << Emploee::Manager::salary << "\t\t";
-		cout << Emploee::Rower::salary << endl;
+		if (num_may_emp == mas_emploee[i].date_born.month)
+		{
+			cout << mas_emploee[i].Name << " " << mas_emploee[i].Surname << " " << mas_emploee[i].Patronymic << "\t\t";
+			cout << mas_emploee[i].Position << "\t\t";
+			
+			cout << mas_emploee[i].date_born.day << "." << mas_emploee[i].date_born.month << "." << mas_emploee[i].date_born.year << "\t\t";
+			
+			cout << Emploee::Manager::salary << "\t\t";
+			cout << Emploee::Rower::salary << endl;
+		}
 	}
-}
+	// todo: если сотрудников по условию не найдено, то сообщить об этом на экране
 }
 
 
 int main()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
+	setlocale(0, "ru");
 	//srand(time(NULL));
 	Emploee* mas_emploee = new Emploee[2];
-	
+
 	//list<Emploee> List_Emploee[2];
 
 	int min = 20000;
-	int may_month =5;
-	int num_may_emp;
-	int count_may_emp=0;
+	int may_month = 5;
+	int num_may_emp = 0;
+	int count_may_emp = 0;
 	for (size_t i = 0; i < 2; i++)
 	{
-		       cout << "Введите ФИО "<<i+1 << "-ого сотрудника галеры: ";
-			   cin.ignore(cin.rdbuf()->in_avail());
-		       cin>>mas_emploee[i].Name>> mas_emploee[i].Surname>> mas_emploee[i].Patronymic;
-			   cout << "Введите должность " << i + 1 << "-ого  сотрудника галеры(Manager or Гребец): ";
-			   cin >> mas_emploee[i].Position;//Manager or Worker
-			   cout << "Введите дату рождения " << i + 1 << "-ого сотрудника галеры через пробел(напрример 12 12 12):";
-			   cin >> mas_emploee[i].date_born.day >> mas_emploee[i].date_born.month >> mas_emploee[i].date_born.year;
-			   if (mas_emploee[i].date_born.month == may_month){
-				   num_may_emp = mas_emploee[i].date_born.month;
-				   count_may_emp++;
-			   }
+		cout << "Введите ФИО " << i + 1 << "-ого сотрудника галеры: ";
+		cin.ignore(cin.rdbuf()->in_avail());
+		getline(cin, mas_emploee[i].Name);
+		getline(cin, mas_emploee[i].Surname);
+		getline(cin, mas_emploee[i].Patronymic);
+		cout << "Введите должность " << i + 1 << "-ого  сотрудника галеры(Manager or Гребец): ";
+		cin >> mas_emploee[i].Position;//Manager or Worker
+		cout << "Введите дату рождения " << i + 1 << "-ого сотрудника галеры через пробел(напрример 12 12 12):";
+		cin >> mas_emploee[i].date_born.day >> mas_emploee[i].date_born.month >> mas_emploee[i].date_born.year;
+		// todo: надо бы добавить проверку корректности введённой даты
+		if (mas_emploee[i].date_born.month == may_month) { // эта же проверка в функции ShowInfoForMayEmploee() - дублироване кода
+			num_may_emp = mas_emploee[i].date_born.month;
+			count_may_emp++;
+		}
 	}
-	ShowInfoForMayEmploee(num_may_emp,mas_emploee, count_may_emp);
-	
-
-
-
-
+	ShowInfoForMayEmploee(num_may_emp, mas_emploee, count_may_emp);
 }
-
